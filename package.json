@@ -1,5 +1,5 @@
 {
-  "name": "todoist-history-remover-1",
+  "name": "todoist-history-remover",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
