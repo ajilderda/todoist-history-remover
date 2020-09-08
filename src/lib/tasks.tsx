@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { token } from './auth';
-import { GetAllResponse, Task } from '../model/responses';
+import { GetAllCompletedResponse, CompletedTask, Task } from '../model/responses';
 
 export async function deleteTask(taskId: string) {
   const response = await fetch(`https://api.todoist.com/rest/v1/tasks/${taskId}`, {
@@ -13,13 +14,28 @@ export async function deleteTask(taskId: string) {
   return response;
 }
 
-export async function getCompletedTasks(): Promise<Task[]> {
+export async function getCompletedItems(): Promise<CompletedTask[]> {
   const response = await fetch(`https://api.todoist.com/sync/v8/completed/get_all?token=${token}&limit=200`)
     .then(response => {
       if (!response.ok) throw new Error(response.statusText);
-      return response.json() as Promise<GetAllResponse>;
+      return response.json() as Promise<GetAllCompletedResponse>;
     })
     .then(data => data.items);
 
   return response;
+}
+
+export async function get(resources: string[]) {
+  console.log(`[todoist/get] Fetching ${resources.join(', ')} from Todoist...`);
+  const res = await axios.post<string, any>('https://api.todoist.com/sync/v8/sync', {
+    token,
+    sync_token: '*',
+    resource_types: JSON.stringify(resources),
+  });
+  return res.data;
+}
+
+export async function getItems(): Promise<Task[]> {
+  const { items } = await get(['items']);
+  return items;
 }
