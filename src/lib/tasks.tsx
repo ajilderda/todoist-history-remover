@@ -14,8 +14,8 @@ export async function deleteTask(taskId: string) {
   return response;
 }
 
-export async function getCompletedItems(): Promise<CompletedTask[]> {
-  const response = await fetch(`https://api.todoist.com/sync/v8/completed/get_all?token=${token}&limit=200`)
+export async function getCompletedItems(offset = 0): Promise<CompletedTask[]> {
+  const response = await fetch(`https://api.todoist.com/sync/v8/completed/get_all?token=${token}&limit=200&offset=${offset}`)
     .then(response => {
       if (!response.ok) throw new Error(response.statusText);
       return response.json() as Promise<GetAllCompletedResponse>;
