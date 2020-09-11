@@ -3,15 +3,15 @@ import './App.css';
 import { CompletedTask, Task } from './model/responses';
 import { getCompletedItems, getItems } from './lib/tasks';
 
-const items = getItems();
-const completedTasks = getCompletedItems();
-
-const partitionItems = ([tasks, completedTasks]: [Task[], CompletedTask[]]) => {
+// tuple type below causes issues (which is why 'any' is used). Keep an eye out for this PR:
+// https://github.com/facebook/create-react-app/pull/9434
+// // const partitionItems = ([tasks, completedTasks]: [Task[], CompletedTask[]]) => {
+const partitionItems = ([tasks, completedTasks]: any) => {
   const itemsToDelete: CompletedTask[] = [];
   const itemsToKeep: CompletedTask[] = [];
 
-  completedTasks.forEach(completedTask => {
-    const isRecurring = tasks.find(task => task.id === completedTask.task_id)?.due?.is_recurring === true;
+  completedTasks.forEach((completedTask: CompletedTask) => {
+    const isRecurring = tasks.find((task: Task) => task.id === completedTask.task_id)?.due?.is_recurring === true;
     (isRecurring ? itemsToKeep : itemsToDelete).push(completedTask);
   });
 
@@ -24,9 +24,7 @@ const getAllCompletedItems = async (cb: any = (f: never) => f, offset = 0, paylo
   cb(response);
   const mergedItems = payload.concat(response);
   // make a new call if there are items remaining
-  if (response.length) {
-    return getAllCompletedItems(cb, offset + 200, mergedItems);
-  }
+  if (response.length && payload.length < 200) return getAllCompletedItems(cb, offset + 200, mergedItems);
   return mergedItems;
 }
 
@@ -44,7 +42,6 @@ function App() {
       getAllCompletedItems((response: CompletedTask[]) => setCompletedItems(completedItems => completedItems.concat(response)))
     ])
     .then(response => setPartitionedItems(partitionItems(response)))
-
   }, []);
 
   return (
