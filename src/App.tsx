@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { CompletedTask, Task } from './model/responses';
 import { getCompletedItems, getItems } from './lib/tasks';
+import { generateState } from './utils/oauth-state';
 
 // tuple type below causes issues (which is why 'any' is used). Keep an eye out for this PR:
 // https://github.com/facebook/create-react-app/pull/9434
@@ -28,21 +29,28 @@ const getAllCompletedItems = async (cb: any = (f: never) => f, offset = 0, paylo
   return mergedItems;
 }
 
+const loginToTodoist = () => {
+  const state = generateState();
+  sessionStorage.setItem('state', state);
+  //redirect
+  window.location.assign(`/.netlify/functions/auth?state=${state}`);
+}
+
 function App() {
   const [paritionedItems, setPartitionedItems] = useState<CompletedTask[][]>([[],[]]);
   const [completedItems, setCompletedItems] = useState<CompletedTask[]>([]);
   const [status, setStatus] = useState<'loading' | 'done'>();
 
   // get tasks on mount
-  useEffect(() => {
-    setStatus('loading');
+  // useEffect(() => {
+  //   setStatus('loading');
 
-    Promise.all([
-      getItems(),
-      getAllCompletedItems((response: CompletedTask[]) => setCompletedItems(completedItems => completedItems.concat(response)))
-    ])
-    .then(response => setPartitionedItems(partitionItems(response)))
-  }, []);
+  //   Promise.all([
+  //     getItems(),
+  //     getAllCompletedItems((response: CompletedTask[]) => setCompletedItems(completedItems => completedItems.concat(response)))
+  //   ])
+  //   .then(response => setPartitionedItems(partitionItems(response)))
+  // }, []);
 
   return (
     <div className="App">
@@ -52,6 +60,8 @@ function App() {
       <div>
         {completedItems.length} completed tasks fetched
       </div>
+
+      <button onClick={loginToTodoist}>Login to Todoist</button>
 
       <div style={{ display: 'flex' }}>
         <div>
