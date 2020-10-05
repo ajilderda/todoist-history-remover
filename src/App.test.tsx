@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import App from './App';
-import { getItems } from './lib/tasks';
-import { getCompletedItems } from './lib/tasks';
+import { getItems } from './lib/taskActions';
+import { getCompletedItems } from './lib/taskActions';
 
 jest.mock('./lib/tasks');
 

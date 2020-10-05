@@ -1,4 +1,4 @@
-[
+const completedItems = [
   {
     "id": 3918142318,
     "user_id": 14072415,
@@ -1800,3 +1800,5 @@
     "meta_data": null
   }
 ]
+
+export default completedItems;

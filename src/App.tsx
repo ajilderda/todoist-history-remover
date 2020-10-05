@@ -1,83 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 import './App.css';
-import { CompletedTask, Task } from './model/responses';
-import { getCompletedItems, getItems } from './lib/tasks';
-import { generateState } from './utils/oauth-state';
-
-// tuple type below causes issues (which is why 'any' is used). Keep an eye out for this PR:
-// https://github.com/facebook/create-react-app/pull/9434
-// // const partitionItems = ([tasks, completedTasks]: [Task[], CompletedTask[]]) => {
-const partitionItems = ([tasks, completedTasks]: any) => {
-  const itemsToDelete: CompletedTask[] = [];
-  const itemsToKeep: CompletedTask[] = [];
-
-  completedTasks.forEach((completedTask: CompletedTask) => {
-    const isRecurring = tasks.find((task: Task) => task.id === completedTask.task_id)?.due?.is_recurring === true;
-    (isRecurring ? itemsToKeep : itemsToDelete).push(completedTask);
-  });
-
-  return [itemsToDelete, itemsToKeep];
-};
-
-// recursive function that returns a new promise if the limit is not reached.
-const getAllCompletedItems = async (cb: any = (f: never) => f, offset = 0, payload: CompletedTask[] = []): Promise<CompletedTask[]> => {
-  const response = await getCompletedItems(offset);
-  cb(response);
-  const mergedItems = payload.concat(response);
-  // make a new call if there are items remaining
-  if (response.length && payload.length < 200) return getAllCompletedItems(cb, offset + 200, mergedItems);
-  return mergedItems;
-}
-
-const loginToTodoist = () => {
-  const state = generateState();
-  sessionStorage.setItem('state', state);
-  //redirect
-  window.location.assign(`/.netlify/functions/auth?state=${state}`);
-}
+import Home from './components/Home';
+import Tasks from './components/Tasks';
+import ReviewTasks from './components/ReviewTasks';
 
 function App() {
-  const [paritionedItems, setPartitionedItems] = useState<CompletedTask[][]>([[],[]]);
-  const [completedItems, setCompletedItems] = useState<CompletedTask[]>([]);
-  const [status, setStatus] = useState<'loading' | 'done'>();
-
-  // get tasks on mount
-  // useEffect(() => {
-  //   setStatus('loading');
-
-  //   Promise.all([
-  //     getItems(),
-  //     getAllCompletedItems((response: CompletedTask[]) => setCompletedItems(completedItems => completedItems.concat(response)))
-  //   ])
-  //   .then(response => setPartitionedItems(partitionItems(response)))
-  // }, []);
-
   return (
     <div className="App">
-      <div>
-        Status: {status}
-      </div>
-      <div>
-        {completedItems.length} completed tasks fetched
-      </div>
-
-      <button onClick={loginToTodoist}>Login to Todoist</button>
-
-      <div style={{ display: 'flex' }}>
+      <Router>
         <div>
-          <h2>🗑 Items to delete</h2>
-          <ol>
-            {paritionedItems?.[0].map((task, i) => <li key={i}>{task.content}</li>)}
-          </ol>
-        </div>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/tasks">Get tasks</Link>
+              </li>
+              <li>
+                <Link to="/review-tasks">Review tasks</Link>
+              </li>
+            </ul>
+          </nav>
 
-        <div>
-          <h2>♻️ Items to keep (recurring tasks)</h2>
-          <ol>
-            {paritionedItems?.[1].map((task, i) => <li key={i}>{task.content}</li>)}
-          </ol>
+          <Switch>
+            <Route path="/tasks">
+              <Tasks />
+            </Route>
+            <Route path="/review-tasks">
+              <ReviewTasks />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
         </div>
-      </div>
+      </Router>
     </div>
   );
 }

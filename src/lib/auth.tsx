@@ -1,1 +1,1 @@
-export const token = process.env.REACT_APP_TOKEN;
+export const token = sessionStorage.getItem('token');
