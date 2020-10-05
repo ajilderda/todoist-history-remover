@@ -14,6 +14,7 @@ export const config = {
   tokenPath: `${todoistApi}/oauth/access_token`,
   // redirect_uri after successful sign in
   redirect_uri: `${siteUrl}/.netlify/functions/auth-callback`,
+  success_uri: `${siteUrl}/tasks`,
 }
 
 function authInstance(credentials) {

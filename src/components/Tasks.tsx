@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { CompletedTask, Task } from '../model/responses';
-import { getCompletedItems, getItems } from '../lib/taskActions';
-import { generateState } from '../utils/oauth-state';
+import { getAllCompletedItems, getItems } from '../lib/taskActions';
+import { useAsyncError } from './../hooks/useAsyncError';
+import { token } from '../lib/auth';
 
 // tuple type below causes issues (which is why 'any' is used). Keep an eye out for this PR:
 // https://github.com/facebook/create-react-app/pull/9434
@@ -18,27 +19,11 @@ const partitionItems = ([tasks, completedTasks]: any) => {
   return [itemsToDelete, itemsToKeep];
 };
 
-// recursive function that returns a new promise if the limit is not reached.
-const getAllCompletedItems = async (cb: any = (f: never) => f, offset = 0, payload: CompletedTask[] = []): Promise<CompletedTask[]> => {
-  const response = await getCompletedItems(offset);
-  cb(response);
-  const mergedItems = payload.concat(response);
-  // make a new call if there are items remaining
-  if (response.length && payload.length < 200) return getAllCompletedItems(cb, offset + 200, mergedItems);
-  return mergedItems;
-}
-
-const loginToTodoist = () => {
-  const state = generateState();
-  sessionStorage.setItem('state', state);
-  //redirect
-  window.location.assign(`/.netlify/functions/auth?state=${state}`);
-}
-
 function Tasks(props: any) {
   const [paritionedItems, setPartitionedItems] = useState<CompletedTask[][]>([[],[]]);
   const [completedItems, setCompletedItems] = useState<CompletedTask[]>([]);
   const [status, setStatus] = useState<'loading' | 'done'>();
+  const throwError = useAsyncError();
 
   // get tasks on mount
   useEffect(() => {
@@ -49,6 +34,7 @@ function Tasks(props: any) {
       getAllCompletedItems((response: CompletedTask[]) => setCompletedItems(completedItems => completedItems.concat(response)))
     ])
     .then(response => setPartitionedItems(partitionItems(response)))
+    .catch(e => throwError(new Error(e)));
   }, []);
 
   return (
@@ -59,8 +45,6 @@ function Tasks(props: any) {
       <div>
         {completedItems.length} completed tasks fetched
       </div>
-
-      <button onClick={loginToTodoist}>Login to Todoist</button>
 
       <div style={{ display: 'flex' }}>
         <div>

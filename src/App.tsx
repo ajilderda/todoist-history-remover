@@ -3,12 +3,15 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
+import {ErrorBoundary} from 'react-error-boundary'
 import './App.css';
 import Home from './components/Home';
 import Tasks from './components/Tasks';
 import ReviewTasks from './components/ReviewTasks';
+import { token } from './lib/auth';
 
 function App() {
   return (
@@ -31,7 +34,11 @@ function App() {
 
           <Switch>
             <Route path="/tasks">
-              <Tasks />
+              <ErrorBoundary
+                fallback={<Redirect to={{pathname: "/"}}/>}
+              >
+                <Tasks />
+              </ErrorBoundary>
             </Route>
             <Route path="/review-tasks">
               <ReviewTasks />

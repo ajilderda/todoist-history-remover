@@ -47,7 +47,7 @@ exports.handler = (event, context, callback) => {
 
           sessionStorage.removeItem('state');
           sessionStorage.setItem('token', '${token}');
-          window.location.replace('${siteUrl}');
+          window.location.replace('${config.success_uri}');
         `),
         headers: {
           'Content-Type': 'text/html',

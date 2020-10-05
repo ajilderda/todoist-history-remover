@@ -39,3 +39,13 @@ export async function getItems(): Promise<Task[]> {
   const { items } = await get(['items']);
   return items;
 }
+
+// recursive function that returns a new promise if the limit is not reached.
+export const getAllCompletedItems = async (cb: any = (f: never) => f, offset = 0, payload: CompletedTask[] = []): Promise<CompletedTask[]> => {
+  const response = await getCompletedItems(offset);
+  cb(response);
+  const mergedItems = payload.concat(response);
+  // make a new call if there are items remaining
+  if (response.length && payload.length < 200) return getAllCompletedItems(cb, offset + 200, mergedItems);
+  return mergedItems;
+}
