@@ -3,6 +3,7 @@ import { CompletedTask, Task } from '../model/responses';
 import { getAllCompletedItems, getItems } from '../lib/taskActions';
 import { useAsyncError } from './../hooks/useAsyncError';
 import { token } from '../lib/auth';
+import Spinner from './Spinner';
 
 // tuple type below causes issues (which is why 'any' is used). Keep an eye out for this PR:
 // https://github.com/facebook/create-react-app/pull/9434
@@ -34,8 +35,18 @@ function Tasks(props: any) {
       getAllCompletedItems((response: CompletedTask[]) => setCompletedItems(completedItems => completedItems.concat(response)))
     ])
     .then(response => setPartitionedItems(partitionItems(response)))
+    .then(() => setStatus('done'))
     .catch(e => throwError(new Error(e)));
   }, []);
+
+  if (status === 'loading') {
+    return (
+      <div>
+        <Spinner></Spinner>
+        {completedItems.length} completed tasks fetched so far
+      </div>
+    )
+  }
 
   return (
     <div>

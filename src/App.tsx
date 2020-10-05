@@ -18,20 +18,6 @@ function App() {
     <div className="App">
       <Router>
         <div>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/tasks">Get tasks</Link>
-              </li>
-              <li>
-                <Link to="/review-tasks">Review tasks</Link>
-              </li>
-            </ul>
-          </nav>
-
           <Switch>
             <Route path="/tasks">
               <ErrorBoundary

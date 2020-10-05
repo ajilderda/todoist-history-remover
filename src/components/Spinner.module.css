@@ -1,0 +1,48 @@
+.circle {
+  width: 48px;
+  height: 48px;
+  position: relative;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  background: #fcecea;
+  border-radius: 50%;
+}
+
+.inner {
+  width: 87%;
+  height: 87%;
+  background: white;
+  border-radius: 50%;
+  margin: auto;
+  vertical-align: middle;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+}
+
+.spinner {
+  height: 0;
+  width: 0;
+  border-radius: 50%;
+  border-right: 24px solid #e44331;
+  border-top: 24px solid transparent;
+  border-left: 24px solid transparent;
+  border-bottom: 24px solid transparent;
+
+  animation: rotate 1s infinite linear;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}

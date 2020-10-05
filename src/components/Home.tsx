@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { generateState } from '../utils/oauth-state';
 import Button from './Button';
+import styles from './Home.module.css';
 
 const loginToTodoist = () => {
   const state = generateState();
@@ -12,12 +13,12 @@ const loginToTodoist = () => {
 
 function Home(props: any) {
   return (
-    <div>
-      <h1>
-        Batch delete your completed Todoist tasks
+    <div className={styles.container}>
+      <h1 className={styles.heading}>
+        Are you an avid Todoist user who cares about privacy?
       </h1>
       <p>
-        Because you don’t want your entire private life remain in the cloud.
+        This app is for you. Batch delete your completed tasks and reduce your digital footprint in a few clicks.
       </p>
       <Button label='Login to Todoist' handleClick={loginToTodoist} />
     </div>
