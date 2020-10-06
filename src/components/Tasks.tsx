@@ -4,6 +4,7 @@ import { getAllCompletedItems, getItems } from '../lib/taskActions';
 import { useAsyncError } from './../hooks/useAsyncError';
 import { token } from '../lib/auth';
 import Spinner from './Spinner';
+import styles from './Tasks.module.css';
 
 // tuple type below causes issues (which is why 'any' is used). Keep an eye out for this PR:
 // https://github.com/facebook/create-react-app/pull/9434
@@ -41,9 +42,15 @@ function Tasks(props: any) {
 
   if (status === 'loading') {
     return (
-      <div>
-        <Spinner></Spinner>
-        {completedItems.length} completed tasks fetched so far
+      <div className={`container ${styles.loadingContainer}`}>
+        <div className={styles.loadingContainerBody}>
+          <Spinner></Spinner>
+          <h1 className={styles.heading}>One moment…</h1>
+          {completedItems.length} completed tasks fetched
+        </div>
+        <div className={styles.loadingContainerFooter}>
+          In the next step you can select the tasks you want to remove.
+        </div>
       </div>
     )
   }

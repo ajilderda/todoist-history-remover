@@ -17,23 +17,21 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <div>
-          <Switch>
-            <Route path="/tasks">
-              <ErrorBoundary
-                fallback={<Redirect to={{pathname: "/"}}/>}
-              >
-                <Tasks />
-              </ErrorBoundary>
-            </Route>
-            <Route path="/review-tasks">
-              <ReviewTasks />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </div>
+        <Switch>
+          <Route path="/tasks">
+            <ErrorBoundary
+              fallback={<Redirect to={{pathname: "/"}}/>}
+            >
+              <Tasks />
+            </ErrorBoundary>
+          </Route>
+          <Route path="/review-tasks">
+            <ReviewTasks />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
       </Router>
     </div>
   );

@@ -1,0 +1,21 @@
+.heading {
+  line-height: 1.2;
+  margin-bottom: 0;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  text-align: center;
+}
+
+.loadingContainerBody {
+  margin-top: auto;
+}
+
+.loadingContainerFooter {
+  font-size: .875rem;
+  margin-bottom: 40px;
+  margin-top: auto;
+}
