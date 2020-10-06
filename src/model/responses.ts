@@ -25,7 +25,7 @@ export interface CompletedTask {
   id: number;
   user_id: number;
   content: string;
-  completed_date: Date;
+  completed_date: string;
   project_id: number;
   task_id: number;
   meta_data: null;

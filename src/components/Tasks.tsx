@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { CompletedTask, Task } from '../model/responses';
 import { getAllCompletedItems, getItems } from '../lib/taskActions';
 import { useAsyncError } from './../hooks/useAsyncError';
-import { token } from '../lib/auth';
 import Spinner from './Spinner';
 import styles from './Tasks.module.css';
+import TaskComponent from './Task';
 
 // tuple type below causes issues (which is why 'any' is used). Keep an eye out for this PR:
 // https://github.com/facebook/create-react-app/pull/9434
@@ -56,28 +56,23 @@ function Tasks(props: any) {
   }
 
   return (
-    <div>
-      <div>
-        Status: {status}
-      </div>
-      <div>
-        {completedItems.length} completed tasks fetched
-      </div>
-
-      <div style={{ display: 'flex' }}>
-        <div>
-          <h2>🗑 Items to delete</h2>
-          <ol>
-            {paritionedItems?.[0].map((task, i) => <li key={i}>{task.content}</li>)}
-          </ol>
-        </div>
-
-        <div>
-          <h2>♻️ Items to keep (recurring tasks)</h2>
-          <ol>
-            {paritionedItems?.[1].map((task, i) => <li key={i}>{task.content}</li>)}
-          </ol>
-        </div>
+    <div style={{ display: 'flex' }}>
+      <div className="container">
+        <h2>🗑 Items to delete</h2>
+        <ul>
+          {paritionedItems?.[0].map((task, i) => {
+            return (
+              <li>
+                <TaskComponent
+                  key={i}
+                  title={task.content}
+                  checked={false}
+                  date={task.completed_date}
+                />
+              </li>
+            )
+          })}
+        </ul>
       </div>
     </div>
   )

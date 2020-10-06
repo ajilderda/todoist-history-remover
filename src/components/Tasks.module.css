@@ -19,3 +19,16 @@
   margin-bottom: 40px;
   margin-top: auto;
 }
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 8px;
+}
+
+li:last-of-type {
+  margin-bottom: 0;
+}

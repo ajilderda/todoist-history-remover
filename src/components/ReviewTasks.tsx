@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes, { InferProps } from 'prop-types';
 import FormCheckbox from './FormCheckbox';
-import CompletedTask from './CompletedTask';
+import Task from './Task';
 import Button from './Button';
 import completedItems from '../mocks/completedItems.get.js';
 import Select from './Select';
@@ -14,7 +13,7 @@ function ReviewTasks() {
 
       {completedItems.map((item, index) => (
         <div key={index}>
-          <CompletedTask
+          <Task
               title={item.content}
               checked={false}
               date={item.completed_date}
