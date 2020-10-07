@@ -1,18 +1,28 @@
 import React from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 import Checkbox from './Checkbox';
+import styles from './FormCheckbox.module.css';
 
-function FormCheckbox({render = f => f}: InferProps<typeof FormCheckbox.propTypes>) {
+function FormCheckbox({label, render = f => f, onCheckboxChange}: InferProps<typeof FormCheckbox.propTypes>) {
   return (
     <div>
-      <Checkbox />
-      {render()}
+      <label>
+        <Checkbox onCheckboxChange={onCheckboxChange} />
+        { label }
+      </label>
+      {render && render()}
     </div>
   )
 }
 
 FormCheckbox.propTypes = {
-  render: PropTypes.func.isRequired,
+  label: PropTypes.string,
+  onCheckboxChange: PropTypes.func.isRequired,
+  render: PropTypes.func,
 };
+
+FormCheckbox.defaultProps = {
+  onCheckboxChange: (f: any) => f
+}
 
 export default FormCheckbox;

@@ -5,6 +5,8 @@ import { useAsyncError } from './../hooks/useAsyncError';
 import Spinner from './Spinner';
 import styles from './Tasks.module.css';
 import TaskComponent from './Task';
+import FormCheckbox from './FormCheckbox';
+import Select from './Select';
 
 // tuple type below causes issues (which is why 'any' is used). Keep an eye out for this PR:
 // https://github.com/facebook/create-react-app/pull/9434
@@ -26,6 +28,7 @@ function Tasks(props: any) {
   const [completedItems, setCompletedItems] = useState<CompletedTask[]>([]);
   const [status, setStatus] = useState<'loading' | 'done'>();
   const throwError = useAsyncError();
+  const [removeAllItems, setRemoveAllItems] = useState(true);
 
   // get tasks on mount
   useEffect(() => {
@@ -56,24 +59,29 @@ function Tasks(props: any) {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
-      <div className="container">
-        <h2>🗑 Items to delete</h2>
-        <ul>
-          {paritionedItems?.[0].map((task, i) => {
-            return (
-              <li>
-                <TaskComponent
-                  key={i}
-                  title={task.content}
-                  checked={false}
-                  date={task.completed_date}
-                />
-              </li>
-            )
-          })}
-        </ul>
-      </div>
+    <div className={`${styles.container} container`}>
+      <h2 className={styles.heading}>Queued for removal</h2>
+      <p className={styles.subheading}>9.321 completed tasks</p>
+
+      <FormCheckbox
+        onCheckboxChange={(e) => setRemoveAllItems(!e.target.checked)}
+        label="Only delete items older than"
+        render={() => <Select disabled={removeAllItems} options={[{ label: 'label', value: 'value' }]} />}
+      />
+
+      <ul>
+        {paritionedItems?.[0].map((task, i) => {
+          return (
+            <li key={i}>
+              <TaskComponent
+                title={task.content}
+                checked={false}
+                date={task.completed_date}
+              />
+            </li>
+          )
+        })}
+      </ul>
     </div>
   )
 }
