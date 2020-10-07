@@ -20,6 +20,21 @@
   margin-top: auto;
 }
 
+.container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.heading {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.subheading {
+  font-size: 1.25rem;
+}
+
 ul {
   list-style: none;
   padding: 0;
