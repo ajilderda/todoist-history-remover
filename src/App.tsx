@@ -11,7 +11,7 @@ import './App.css';
 import Home from './components/Home';
 import Tasks from './components/Tasks';
 import ReviewTasks from './components/ReviewTasks';
-import { token } from './lib/auth';
+import ErrorGettingTasks from './components/ErrorGettingTasks';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         <Switch>
           <Route path="/tasks">
             <ErrorBoundary
-              fallback={<Redirect to={{pathname: "/"}}/>}
+              FallbackComponent={ErrorGettingTasks}
             >
               <Tasks />
             </ErrorBoundary>

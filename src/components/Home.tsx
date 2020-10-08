@@ -21,6 +21,7 @@ function Home(props: any) {
         This app is for you. Batch delete your completed tasks and reduce your digital footprint in a few clicks.
       </p>
       <Button label='Login to Todoist' handleClick={loginToTodoist} />
+      * Please note that you need to be a Premium Todoist user to be able to use this app
     </div>
   )
 }
