@@ -3,10 +3,10 @@ import { CompletedTask, Task } from '../model/responses';
 import { getAllCompletedItems, getItems } from '../lib/taskActions';
 import { useAsyncError } from './../hooks/useAsyncError';
 import Spinner from './Spinner';
-import styles from './Tasks.module.css';
 import TaskComponent from './Task';
 import FormCheckbox from './FormCheckbox';
 import Select from './Select';
+import styles from './Tasks.module.css';
 
 // tuple type below causes issues (which is why 'any' is used). Keep an eye out for this PR:
 // https://github.com/facebook/create-react-app/pull/9434
@@ -66,7 +66,12 @@ function Tasks(props: any) {
       <FormCheckbox
         onCheckboxChange={(e) => setRemoveAllItems(!e.target.checked)}
         label="Only delete items older than"
-        render={() => <Select disabled={removeAllItems} options={[{ label: 'label', value: 'value' }]} />}
+        render={() => <Select style={{ marginLeft: '6px' }} disabled={removeAllItems} options={[
+          { label: '7 days', value: '7' },
+          { label: '30 days', value: '30' },
+          { label: '90 days', value: '90' },
+          { label: '1 year', value: '365' }
+        ]} />}
       />
 
       <ul>

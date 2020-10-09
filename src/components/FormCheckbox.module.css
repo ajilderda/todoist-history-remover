@@ -1,3 +1,60 @@
-div {
+.container {
   display: flex;
+}
+
+input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+label {
+  position: relative;
+  display: inline-block;
+  padding: 0 0 0 1.5rem;
+  height: 1.5em;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+label::before,
+label::after {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  display: block;
+  height: 16px;
+  width: 16px;
+}
+
+label::before {
+  content: '';
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+input + label::after {
+  content: '';
+  line-height: 1.5;
+  text-align: center;
+  height: 10px;
+  width: 5px;
+  top: 5px;
+  left: 6px;
+  transition: all .15s ease;
+  border-bottom: 2px solid #333;
+  border-right: 2px solid #333;
+  opacity: 0;
+  -webkit-transform: rotate(45deg) scale(0.75);
+  -ms-transform: rotate(45deg) scale(0.75);
+  -o-transform: rotate(45deg) scale(0.75);
+  transform: rotate(45deg) scale(0.75);
+}
+
+input:checked + label::after {
+  opacity: 1;
+  -webkit-transform: rotate(45deg) scale(1);
+  -ms-transform: rotate(45deg) scale(1);
+  -o-transform: rotate(45deg) scale(1);
+  transform: rotate(45deg) scale(1);
 }
