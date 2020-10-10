@@ -9,8 +9,6 @@ import Select from './Select';
 function ReviewTasks() {
   return (
     <div>
-      <FormCheckbox render={() => (<Select options={[{ label: 'label', value: 'value' }]} />)} />
-
       {completedItems.map((item, index) => (
         <div key={index}>
           <Task

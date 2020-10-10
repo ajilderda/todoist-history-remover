@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, createRef } from 'react';
+import sub from 'date-fns/sub';
 import { CompletedTask, Task } from '../model/responses';
 import { getAllCompletedItems, getItems } from '../lib/taskActions';
 import { useAsyncError } from './../hooks/useAsyncError';
@@ -29,6 +30,15 @@ function Tasks(props: any) {
   const [status, setStatus] = useState<'loading' | 'done'>();
   const throwError = useAsyncError();
   const [removeAllItems, setRemoveAllItems] = useState(true);
+
+  const selectRef = useRef<HTMLSelectElement>(null);
+  const [deleteOffsetInDays, setDeleteOffsetInDays] = useState<number>(0);
+  const dateChangeHandler = (event: any) => setDeleteOffsetInDays(parseInt(event.target.value, 10));
+
+  useEffect(() => {
+    if (removeAllItems) setDeleteOffsetInDays(0);
+    else setDeleteOffsetInDays(parseInt(selectRef.current!.value, 10));
+  }, [removeAllItems, deleteOffsetInDays]);
 
   // get tasks on mount
   useEffect(() => {
@@ -66,7 +76,7 @@ function Tasks(props: any) {
       <FormCheckbox
         onCheckboxChange={(e) => setRemoveAllItems(!e.target.checked)}
         label="Only delete items older than"
-        render={() => <Select style={{ marginLeft: '6px' }} disabled={removeAllItems} options={[
+        render={() => <Select ref={selectRef} value={deleteOffsetInDays} style={{ marginLeft: '6px' }} disabled={removeAllItems} onChange={dateChangeHandler} options={[
           { label: '7 days', value: '7' },
           { label: '30 days', value: '30' },
           { label: '90 days', value: '90' },

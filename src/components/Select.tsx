@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import PropTypes, { InferProps } from 'prop-types';
 import styles from './Select.module.css';
 
-function Select({style, options, disabled}: InferProps<typeof Select.propTypes>) {
-  return <select style={style as object} className={styles.select} disabled={disabled ? true : false}>
-    {options.map(({value, label} = options, index) => {
+const Select: any = forwardRef(({style, options, disabled, onChange}: InferProps<typeof Select.propTypes>, ref: any) => {
+  return <select
+    onChange={onChange}
+    style={style as object}
+    ref={ref}
+    className={styles.select}
+    disabled={disabled ? true : false}
+  >
+    {options.map(({value, label} = options, index: number) => {
       return (
         <option key={index} value={value}>
             {label}
@@ -12,12 +18,14 @@ function Select({style, options, disabled}: InferProps<typeof Select.propTypes>)
       )
     })}
   </select>;
-}
+});
 
 Select.propTypes = {
-  style: PropTypes.object,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.number,
   options: PropTypes.array.isRequired,
-  disabled: PropTypes.bool
+  style: PropTypes.object,
+  disabled: PropTypes.bool,
 };
 
 Select.defaultProps = {

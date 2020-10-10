@@ -46,6 +46,6 @@ export const getAllCompletedItems = async (cb: any = (f: never) => f, offset = 0
   cb(response);
   const mergedItems = payload.concat(response);
   // make a new call if there are items remaining
-  if (response.length && payload.length < 200) return getAllCompletedItems(cb, offset + 200, mergedItems);
+  if (response.length && payload.length < 0) return getAllCompletedItems(cb, offset + 200, mergedItems);
   return mergedItems;
 }
