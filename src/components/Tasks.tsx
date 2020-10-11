@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, createRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import sub from 'date-fns/sub';
+import compareAsc from 'date-fns/compareAsc'
 import { CompletedTask, Task } from '../model/responses';
 import { getAllCompletedItems, getItems } from '../lib/taskActions';
 import { useAsyncError } from './../hooks/useAsyncError';
@@ -12,20 +13,22 @@ import styles from './Tasks.module.css';
 // tuple type below causes issues (which is why 'any' is used). Keep an eye out for this PR:
 // https://github.com/facebook/create-react-app/pull/9434
 // // const partitionItems = ([tasks, completedTasks]: [Task[], CompletedTask[]]) => {
-const partitionItems = ([tasks, completedTasks]: any) => {
+const partitionItems = ([tasks, completedTasks]: any, predicate: Function = (f: any) => f) => {
   const itemsToDelete: CompletedTask[] = [];
   const itemsToKeep: CompletedTask[] = [];
 
   completedTasks.forEach((completedTask: CompletedTask) => {
     const isRecurring = tasks.find((task: Task) => task.id === completedTask.task_id)?.due?.is_recurring === true;
-    (isRecurring ? itemsToKeep : itemsToDelete).push(completedTask);
+    (isRecurring || !predicate(completedTask) ? itemsToKeep : itemsToDelete).push(completedTask);
   });
 
   return [itemsToDelete, itemsToKeep];
 };
 
 function Tasks(props: any) {
-  const [paritionedItems, setPartitionedItems] = useState<CompletedTask[][]>([[],[]]);
+  // all completed items, except recurring
+  const [partitionedItems, setPartitionedItems] = useState<CompletedTask[][]>([[], []]);
+  const [itemResponse, setItemResponse] = useState<any[]>([[], []]); // see note above about using 'any'
   const [completedItems, setCompletedItems] = useState<CompletedTask[]>([]);
   const [status, setStatus] = useState<'loading' | 'done'>();
   const throwError = useAsyncError();
@@ -35,10 +38,16 @@ function Tasks(props: any) {
   const [deleteOffsetInDays, setDeleteOffsetInDays] = useState<number>(0);
   const dateChangeHandler = (event: any) => setDeleteOffsetInDays(parseInt(event.target.value, 10));
 
+  useEffect(() => setPartitionedItems(partitionItems(itemResponse)), [itemResponse])
+
   useEffect(() => {
     if (removeAllItems) setDeleteOffsetInDays(0);
     else setDeleteOffsetInDays(parseInt(selectRef.current!.value, 10));
-  }, [removeAllItems, deleteOffsetInDays]);
+
+    const dateOffset = sub(Date.now(), { days: deleteOffsetInDays });
+    const itemIsOlderThanOffset = (item: CompletedTask) => compareAsc(new Date(item.completed_date), dateOffset) === -1;
+    setPartitionedItems(partitionItems(itemResponse, itemIsOlderThanOffset))
+  }, [removeAllItems, deleteOffsetInDays, itemResponse]);
 
   // get tasks on mount
   useEffect(() => {
@@ -48,7 +57,7 @@ function Tasks(props: any) {
       getItems(),
       getAllCompletedItems((response: CompletedTask[]) => setCompletedItems(completedItems => completedItems.concat(response)))
     ])
-    .then(response => setPartitionedItems(partitionItems(response)))
+    .then(response => setItemResponse(response))
     .then(() => setStatus('done'))
     .catch(e => throwError(new Error(e)));
   }, []);
@@ -85,7 +94,7 @@ function Tasks(props: any) {
       />
 
       <ul>
-        {paritionedItems?.[0].map((task, i) => {
+        {partitionedItems?.[0].map((task, i) => {
           return (
             <li key={i}>
               <TaskComponent
