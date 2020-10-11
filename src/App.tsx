@@ -10,7 +10,6 @@ import {ErrorBoundary} from 'react-error-boundary'
 import './App.css';
 import Home from './components/Home';
 import Tasks from './components/Tasks';
-import ReviewTasks from './components/ReviewTasks';
 import ErrorGettingTasks from './components/ErrorGettingTasks';
 
 function App() {
@@ -24,9 +23,6 @@ function App() {
             >
               <Tasks />
             </ErrorBoundary>
-          </Route>
-          <Route path="/review-tasks">
-            <ReviewTasks />
           </Route>
           <Route path="/">
             <Home />
