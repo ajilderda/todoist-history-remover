@@ -3,10 +3,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  Redirect
 } from "react-router-dom";
-import {ErrorBoundary} from 'react-error-boundary'
+import { ErrorBoundary } from 'react-error-boundary'
 import './App.css';
 import Home from './components/Home';
 import Tasks from './components/Tasks';

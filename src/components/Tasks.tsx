@@ -57,10 +57,10 @@ function Tasks(props: any) {
       getItems(),
       getAllCompletedItems((response: CompletedTask[]) => setCompletedItems(completedItems => completedItems.concat(response)))
     ])
-    .then(response => setItemResponse(response))
-    .then(() => setStatus('done'))
-    .catch(e => throwError(new Error(e)));
-  }, []);
+      .then(response => setItemResponse(response))
+      .then(() => setStatus('done'))
+      .catch(e => throwError(new Error(e)));
+  }, [throwError]);
 
   if (status === 'loading') {
     return (
